@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paul Hudson - Industrial Design</title>
+    <style>
+        :root {
+            --gap: 5px;
+            --radius: 5px;
+            --bg-color: #000;
+        }
+
+        /* --- FONTS --- */
+        @font-face {
+            font-family: 'ClashDisplay-Regular';
+            src: url('fonts/ClashDisplay-Regular.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'ClashDisplay-Extralight';
+            src: url('fonts/ClashDisplay-Light.ttf') format('truetype');
+            font-weight: 200;
+            font-style: normal;
+        }
+
+        /* --- BASE STYLES --- */
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            color: white;
+            /* Default to Regular for UI */
+            font-family: 'ClashDisplay-Regular', sans-serif;
+            cursor: none !important;
+        }
+
+        /* Desktop: Screen-locked | Tablet & Mobile: Vertical Scroll */
+        @media (min-width: 1025px) {
+            body, html { overflow: hidden; }
+            #main-container { height: 100vh; }
+        }
+        @media (max-width: 1024px) {
+            body, html { overflow-y: auto; height: auto; }
+            #main-container { min-height: 100vh; height: auto; }
+            #custom-cursor { display: none; }
+            * { cursor: auto !important; }
+        }
+
+        /* --- CURSOR --- */
+        #custom-cursor {
+            width: 15px;
+            height: 15px;
+            background-color: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference; /* Makes it visible against any background */
+        }
+
+        /* --- GRID --- */
+        #main-container {
+            display: flex;
+            width: 100%;
+            gap: var(--gap);
+            padding: var(--gap);
+            box-sizing: border-box;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: var(--gap);
+        }
+
+        @media (min-width: 1025px) { .column { height: 100%; } }
+
+        .frame {
+            overflow: hidden;
+            border-radius: var(--radius);
+            background-color: #111;
+            width: 100%;
+            display: flex;
+        }
+
+        .frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* --- INFO OVERLAY --- */
+        #info-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s;
+            z-index: 100;
+        }
+
+        #info-overlay.active { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+
+        .info-content { 
+            text-align: center; 
+            color: #ffffff; 
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+        }
+
+        :root {
+             /* Define the base fluid size here */
+             --h1-size: clamp(1.5rem, 10vw, 3.5rem);
+        }
+
+        .info-content h1 {
+            font-family: 'ClashDisplay-Regular', sans-serif;
+            font-size: var(--h1-size);
+            font-weight: 300;
+            margin: 0;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .subtitle {
+            font-family: 'ClashDisplay-Extralight', sans-serif;
+            font-size: calc(var(--h1-size) * 0.74);
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .request-line {
+            font-family: 'ClashDisplay-Extralight', sans-serif;
+            font-size: calc(var(--h1-size) * 0.17);
+            letter-spacing: 3px;
+            margin-top: 2.5rem;
+            opacity: 0.5;
+        }
+
+        /* --- SOCIALS --- */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 2.5rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+
+        .social-links img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1); /* Ensures black SVGs appear white */
+        }
+
+    
+    </style>
+</head>
+<body onclick="toggleInfo()">
+
+    <div id="custom-cursor"></div>
+
+    <div id="main-container"></div>
+
+    <div id="info-overlay">
+        <div class="info-content">
+            <h1>Paul Hudson</h1>
+            <p class="subtitle">Industrial Design</p>
+            
+            <p class="request-line">FULL PORTFOLIO AVAILABLE UPON REQUEST</p>
+            
+            <div class="social-links" onclick="event.stopPropagation()">
+                <a href="mailto:pauljrhudson@email.com"><img src="icons/email.svg" alt="Email"></a>
+                <a href="https://www.linkedin.com/in/paul-hudson-2444b1a6/" target="_blank"><img src="icons/LinkedIn.svg" alt="LinkedIn"></a>
+                <a href="https://www.instagram.com/paul_____hudson" target="_blank"><img src="icons/instagram.svg" alt="Instagram"></a>
+                <a href="https://www.are.na/paul-hudson/channels" target="_blank"><img src="icons/arena.svg" alt="Are.na"></a>
+            </div>
+
+        
+        </div>
+    </div>
+
+    <script>
+        // --- CURSOR LOGIC ---
+        const cursor = document.getElementById('custom-cursor');
+        let mouseX = 0, mouseY = 0;
+        let ballX = 0, ballY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            // "Lerp" for smooth follow effect
+            ballX += (mouseX - ballX) * 0.15;
+            ballY += (mouseY - ballY) * 0.15;
+            
+            cursor.style.left = ballX + 'px';
+            cursor.style.top = ballY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // --- GRID LOGIC ---
+        const imageFiles = [
+            'images/benefit01.jpg',
+            'images/frame01.png', 
+            'images/filter01.png', 
+            'images/twig02.jpg', 
+            'images/peer01.jpg',
+            'images/bubble02.png', 
+            'images/twig01.jpg', 
+            
+            'images/benefit02.jpg', 
+            'images/nuataaq01.jpg', 
+        
+            'images/frame02.jpg', 
+            'images/nuataaq02.jpg', 
+            'images/bubble01.png',
+            'images/filter02.png', 
+            'images/filter03.png', 
+            'images/bayon01.jpg'
+        ];
+
+        async function buildGrid() {
+            const container = document.getElementById('main-container');
+            container.innerHTML = ''; 
+            const width = window.innerWidth;
+            const columnCount = (width > 1024) ? 5 : (width <= 600 ? 1 : 3);
+
+            const cols = [];
+            for (let i = 0; i < columnCount; i++) {
+                const colDiv = document.createElement('div');
+                colDiv.className = 'column';
+                container.appendChild(colDiv);
+                cols.push({ element: colDiv, height: 0 });
+            }
+
+            for (const url of imageFiles) {
+                const imgData = await getImageData(url);
+                const frame = document.createElement('div');
+                frame.className = 'frame';
+                frame.style.flex = (imgData.ratio).toString();
+                frame.innerHTML = `<img src="${url}">`;
+                
+                const shortest = cols.reduce((prev, curr) => (prev.height <= curr.height ? prev : curr));
+                shortest.element.appendChild(frame);
+                shortest.height += imgData.ratio;
+            }
+        }
+
+        function getImageData(url) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => resolve({ ratio: img.naturalHeight / img.naturalWidth });
+                img.onerror = () => resolve({ ratio: 1 });
+                img.src = url;
+            });
+        }
+
+        // --- OVERLAY LOGIC ---
+        function toggleInfo() {
+            document.getElementById('info-overlay').classList.toggle('active');
+        }
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(buildGrid, 200);
+        });
+
+        buildGrid();
+    </script>
+</body>
+</html>
